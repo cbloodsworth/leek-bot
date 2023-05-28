@@ -1,4 +1,5 @@
 import discord
+import os
 from discord.ext import tasks
 import commands as cm
 
@@ -32,7 +33,4 @@ async def mytask(channel):
     pass
 
 
-with open('secrets/auth.txt') as f:
-    client.run(f.readline())
-
-
+client.run(os.environ['DISCORD_KEY'])
