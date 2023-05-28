@@ -1,5 +1,5 @@
 import discord
-import leetcode as lc
+import commands as cm
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -12,21 +12,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # Don't pay attention to messages the bot itself sends
     if message.author == client.user:
         return
 
-    msg: list[str] = message.content.split(' ')
+    msg = message.content.split(' ')
+    cmd, args = msg[0], msg[1:]
 
-    AUDIT_COMMAND = '$lc-audit'
-    if msg[0] == AUDIT_COMMAND:
-        if len(msg) != 2:
-            await message.channel.send('Intended use: `$lc-audit <leetcode_username>')
-            return
+    if cmd == cm.CMD_AUDIT: await cm.lc_audit(args, message.channel)
 
-        username: str = msg[1]
-        await message.channel.send(f'Pulling the latest data on LeetCode user {username}...')
-        await message.channel.send(lc.leetcodeScrape(username))
 
-with open('../auth.txt') as f:
+with open('secrets/auth.txt') as f:
     client.run(f.readline())
+
+

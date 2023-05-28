@@ -21,14 +21,14 @@ class User:
             f"\t Their most recent problem was {self.recent_problem}.\n" if self.recent else ""
         )
         return (
-            "Username: \t{self.name}\n"
-            f"Rank: \t\t{self.rank}\n\n"
-            f"This user is{' ' if self.recent else ' not '}active.\n"
+            f"**Username:** \t{self.name}\n"
+            f"**Rank:** \t\t\t{self.rank}\n\n"
+            f"This user is{' ' if self.recent else ' **_not_** '}active.\n"
             f"{recent_line}"
-            f"\nNumber of completed problems: ({self.completed_total})\n"
-            f"\tEasy: {self.completed_list[0]}\n"
-            f"\tMedium: {self.completed_list[1]}\n"
-            f"\tHard: {self.completed_list[2]}\n"
+            f"\n**Number of completed problems:** ({self.completed_total})\n"
+            f"\t_Easy:_ {self.completed_list[0]}\n"
+            f"\t_Medium:_ {self.completed_list[1]}\n"
+            f"\t_Hard:_ {self.completed_list[2]}\n"
         )
 
     def __str__(self):
