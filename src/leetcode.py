@@ -38,6 +38,12 @@ class User:
         return self.getAttributes()
 
 
+"""
+Checks if the username provided is valid
+"""
+def checkUser(username: str) -> bool:
+    return requests.get("https://leetcode.com/" + username) == True
+
 def leetcodeScrape(username: str):
     # Initialize user object
     user = User()
