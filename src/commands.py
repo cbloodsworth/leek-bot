@@ -9,6 +9,7 @@ X = os.getenv('CALL_TOKEN')
 CMD_AUDIT = f'{X}lc-audit'
 CMD_FOLLOW = f'{X}lc-follow'
 CMD_UNFOLLOW = f'{X}lc-unfollow'
+CMD_FOLLOWING = f'{X}lc-following'
 CMD_HELP = f'{X}lc-help'
 
 TIMEOUT = 10.0
@@ -105,4 +106,7 @@ async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
     else:
         await channel.send(f"Sorry, no such user exists.")
         return
+
+async def lc_following(channel: TextChannel):
+    await channel.send(f"{db.get_followed()}")
 

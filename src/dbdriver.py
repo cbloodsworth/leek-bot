@@ -22,4 +22,7 @@ def query_user(username: str):
     if result: return result['value']
     else: return None 
 
+def get_followed() -> list[str]:
+    results = collection.find({'value': True})
+    return [res['username'] for res in results]
 
