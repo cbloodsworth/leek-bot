@@ -42,9 +42,8 @@ class User:
 Checks if the username provided is valid
 """
 def checkUser(username: str) -> bool:
-    r = requests.get("https://leetcode.com/" + username).status_code
-    if r: return True
-    else: return False
+    r = requests.get("https://leetcode.com/" + username)
+    return r.status_code != 404
 
 def leetcodeScrape(username: str):
     # Initialize user object
@@ -78,7 +77,12 @@ def leetcodeScrape(username: str):
     raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
 
     # If submitted recently (LC uses the format "23 hours ago")
-    user.recent = "hour" in raw_recent or "day " in raw_recent
+    for k in ["minute", "hour", "day "]:
+        if k in raw_recent:
+            user.recent = True
+            break
+    else: user.recent = False
+
     if user.recent:
         user.recent_problem = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
 

@@ -2,10 +2,13 @@ import leetcode as lc
 import dbdriver as db
 import asyncio
 from discord import TextChannel, Message, Client
+import os
 
-CMD_AUDIT = '$lc-audit'
-CMD_FOLLOW = '$lc-follow'
-CMD_HELP = '$lc-help'
+X = os.getenv('CALL_TOKEN')
+
+CMD_AUDIT = f'{X}lc-audit'
+CMD_FOLLOW = f'{X}lc-follow'
+CMD_HELP = f'{X}lc-help'
 
 async def lc_audit(args: list[str], channel: TextChannel):
     if len(args) != 1:
