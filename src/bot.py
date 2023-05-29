@@ -16,7 +16,8 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
 
     channel = client.get_channel(1112495961130934312)
-    mytask.start(channel=channel)
+    check_for_recent_problems.start(channel=channel)
+    clear_cache.start()
 
 @client.event
 async def on_message(message):
@@ -41,7 +42,6 @@ async def check_for_recent_problems(channel):
         if not recent_problem: continue
         if (user, recent_problem) not in cache:
             cache.add((user, recent_problem))
-            channel = client.get_channel(1112495961130934312)
             await channel.send(f"{user} just completed {recent_problem}! Be sure to congratulate them.")
 
 
