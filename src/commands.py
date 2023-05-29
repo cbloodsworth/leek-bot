@@ -36,7 +36,7 @@ async def lc_follow(args: list[str], channel: TextChannel, client: Client):
                     and reaction.message.id == msg.id
             )
 
-        try: reaction, user = await client.wait_for("reaction_add", timeout=15.0, check=check)
+        try: reaction, user = await client.wait_for("reaction_add", timeout=7.5, check=check)
         except asyncio.TimeoutError:
             await channel.send("No reaction added within the time limit.")
             return
