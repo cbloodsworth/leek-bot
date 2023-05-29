@@ -16,10 +16,12 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
 
     channel = client.get_channel(1112495961130934312)
-    check_for_recent_problems.start(channel=channel)
-    clear_cache.start()
-    update_streak.start(channel=channel)
 
+    # we dont need this crap running on dev builds
+    if cm.X == '$':
+        check_for_recent_problems.start(channel=channel)
+        clear_cache.start()
+        update_streak.start(channel=channel)
 
 @client.event
 async def on_message(message):
