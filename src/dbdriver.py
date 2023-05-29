@@ -37,10 +37,11 @@ def reset_streak(username):
 """
 Updates streak by 1.
 """
-def update_streak(username):
+def update_streak(username) -> int:
     user = query_user(username)
     new_streak = int(user['recent-streak']) + 1
     collection.update_one({'username': username}, {'$set':{'recent-streak': new_streak}})
+    return new_streak
 
 
 """
