@@ -18,6 +18,8 @@ async def on_ready():
     channel = client.get_channel(1112495961130934312)
     check_for_recent_problems.start(channel=channel)
     clear_cache.start()
+    update_streak.start(channel=channel)
+
 
 @client.event
 async def on_message(message):
@@ -42,12 +44,22 @@ async def check_for_recent_problems(channel):
         if not recent_problem: continue
         if (user, recent_problem) not in cache:
             cache.add((user, recent_problem))
-            await channel.send(f"{user} just completed {recent_problem}! Be sure to congratulate them.")
+            await channel.send(f"{user} just completed {recent_problem}!")
 
 
 @tasks.loop(minutes=60)
 async def clear_cache():
     if cache: cache.clear() 
     
+
+@tasks.loop(seconds=30)
+async def update_streak(channel):
+    for user in db.get_followed():
+        if lc.leetcodeScrape(user).recent: db.update_streak(user)
+        else: 
+            if db.get_streak(user) != 0:
+                await channel.send(f"<@&1112788036074356798> {user} just lost their streak!")
+                db.reset_streak(user)
+
 
 client.run(os.environ['DISCORD_KEY'])

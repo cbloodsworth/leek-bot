@@ -65,6 +65,7 @@ async def lc_follow(args: list[str], channel: TextChannel, client: Client):
         await channel.send(f"Sorry, no such user exists.")
         return
 
+
 async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
     if len(args) != 1:
         await channel.send(f'Intended use: `{CMD_UNFOLLOW} <leetcode_username>')
@@ -106,6 +107,7 @@ async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
     else:
         await channel.send(f"Sorry, no such user exists.")
         return
+
 
 async def lc_following(channel: TextChannel):
     await channel.send(f"{db.get_followed()}")

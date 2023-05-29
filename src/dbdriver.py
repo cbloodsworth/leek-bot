@@ -21,6 +21,43 @@ def change_follow(username: str, status: bool):
 
 
 """
+Fetches current streak for user
+"""
+def get_streak(username):
+    return query_user(username)['recent-streak']
+
+
+"""
+Resets streak to 0
+"""
+def reset_streak(username):
+    collection.update_one({'username': username}, {'$set':{'recent-streak': 0}})
+
+
+"""
+Updates streak by 1.
+"""
+def update_streak(username):
+    user = query_user(username)
+    new_streak = int(user['recent-streak']) + 1
+    collection.update_one({'username': username}, {'$set':{'recent-streak': new_streak}})
+
+
+"""
+For internal use only, should not be called by discord user
+"""
+def set_leekcoins(username: str, amount: int):
+    user = query_user(username)
+    coins = user['leek-coins'] + amount
+    collection.update_one({'username': username}, {'$set':{'leek-coins': coins}})
+    return coins
+
+
+def get_leekcoins(username: str) -> int:
+    user = query_user(username)
+    return user['leek-coins']
+
+"""
 Initializes user if it doesn't already exist in the database, does not do anything else.
 """
 def init_user(username: str):
@@ -43,20 +80,19 @@ If only given a username, it will return True if the user was found and False if
 If given a query on that user, it will return the parameter that the query specified.
     If no such parameter exists, it will return False
 """
-def query_user(username: str, query = None):
+def query_user(username: str, query = None) -> dict:
     result = collection.find_one({'username': username})
 
-    # Returns False if user was not found
+    # Returns None if user was not found
     if not result: 
-        print(f"Error [query_user()]: Could not find user {username}")
-        return False
+        return {}
 
     # If the caller provided a query parameter
     if query: 
         # If the query parameter is invalid
         if query not in QUERIES:
             print(f"Error [query_user()]: Could not find parameter {query}")
-            return False
+            return {}
 
         # else, return the query
         return result[query]
@@ -66,6 +102,6 @@ def query_user(username: str, query = None):
 
 
 def get_followed() -> list[str]:
-    results = collection.find({'value': True})
+    results = collection.find({'followed': True})
     return [res['username'] for res in results]
 
