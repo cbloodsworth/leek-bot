@@ -42,9 +42,8 @@ class User:
 Checks if the username provided is valid
 """
 def checkUser(username: str) -> bool:
-    r = requests.get("https://leetcode.com/" + username).status_code
-    if r: return True
-    else: return False
+    r = requests.get("https://leetcode.com/" + username)
+    return r.status_code != 404
 
 def leetcodeScrape(username: str):
     # Initialize user object
