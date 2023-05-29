@@ -56,7 +56,7 @@ def superRecentProblem(username: str):
 
     return None
 
-def leetcodeScrape(username: str):
+def leetcodeScrape(username: str) -> User:
     # Initialize user object
     user = User()
 
@@ -67,7 +67,8 @@ def leetcodeScrape(username: str):
     try:
         r = requests.get("https://leetcode.com/" + user.name)
     except requests.exceptions.InvalidURL:
-        return -1
+        print("Error [leetcodeScrape]: Invalid username")
+        return user
 
     html_doc = bs(r.content, "html.parser")
 

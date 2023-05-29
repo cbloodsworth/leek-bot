@@ -54,7 +54,7 @@ async def lc_follow(args: list[str], channel: TextChannel, client: Client):
 
         # Decided to follow user
         if str(reaction.emoji) == "✅":
-            db.push_user(username, True)
+            db.change_follow(username, True)
             await channel.send(f"{username} was followed!")
 
         # Decided not to follow user
@@ -64,6 +64,7 @@ async def lc_follow(args: list[str], channel: TextChannel, client: Client):
     else:
         await channel.send(f"Sorry, no such user exists.")
         return
+
 
 async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
     if len(args) != 1:
@@ -96,7 +97,7 @@ async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
 
         # Decided to unfollow user
         if str(reaction.emoji) == "✅":
-            db.push_user(username, False)
+            db.change_follow(username, False)
             await channel.send(f"{username} was **unfollowed**!")
 
         # Decided to keep following user
@@ -106,6 +107,7 @@ async def lc_unfollow(args: list[str], channel: TextChannel, client: Client):
     else:
         await channel.send(f"Sorry, no such user exists.")
         return
+
 
 async def lc_following(channel: TextChannel):
     await channel.send(f"{db.get_followed()}")
