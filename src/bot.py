@@ -47,7 +47,7 @@ async def check_for_recent_problems(channel):
             await channel.send(f"{user} just completed {recent_problem}!")
 
 
-@tasks.loop(minutes=60)
+@tasks.loop(hours=2)
 async def clear_cache():
     if cache: cache.clear() 
     
