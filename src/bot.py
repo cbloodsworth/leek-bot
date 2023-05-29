@@ -55,7 +55,9 @@ async def clear_cache():
 @tasks.loop(hours=24)
 async def update_streak(channel):
     for user in db.get_followed():
-        if lc.leetcodeScrape(user).recent: db.update_streak(user)
+        if lc.leetcodeScrape(user).recent: 
+            streak = db.update_streak(user)
+            await channel.send(f"{user} is on a roll with a streak of {streak}!")
         else: 
             if db.get_streak(user) != 0:
                 await channel.send(f"<@&1112788036074356798> {user} just lost their streak!")
