@@ -25,6 +25,7 @@ async def on_message(message):
 
     if   cmd == cm.CMD_AUDIT: await cm.lc_audit(args, message.channel)
     elif cmd == cm.CMD_FOLLOW: await cm.lc_follow(args, message.channel, client)
+    elif cmd == cm.CMD_UNFOLLOW: await cm.lc_unfollow(args, message.channel, client)
 
 
 @tasks.loop(seconds=10)
