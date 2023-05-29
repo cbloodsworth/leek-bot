@@ -1,7 +1,6 @@
 import leetcode as lc
 import dbdriver as db
 import asyncio
-import csv
 from discord import TextChannel, Message, Client
 
 CMD_AUDIT = '$lc-audit'

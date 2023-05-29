@@ -9,18 +9,6 @@ db = db_client['leek-db']
 collection = db['followed-users']
 
 """
-Places if not exists, otherwise doesn't update
-"""
-def place_user(username: str, followed: bool) -> bool:
-    data = {username : followed}
-    result = collection.find_one(data)
-    if result is None: 
-        collection.insert_one(data)
-        return True
-    else: 
-        return False
-
-"""
 Overwrites if already exists, returns if it was overwritten
 """
 def push_user(username: str, followed: bool) -> bool:
@@ -33,3 +21,5 @@ def query_user(username: str):
     result = collection.find_one({'username': username})
     if result: return result['value']
     else: return None 
+
+
