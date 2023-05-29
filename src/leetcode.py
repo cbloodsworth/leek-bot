@@ -75,8 +75,8 @@ def leetcodeScrape(username: str):
     # Get the most recent problem, if any
     raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
 
-    # If submitted recently (LC uses the format "23 hours ago" or "1 day ago")
-    user.recent = "hour" in raw_recent
+    # If submitted recently (LC uses the format "23 hours ago")
+    user.recent = "hour" in raw_recent or "day " in raw_recent
     if user.recent:
         user.recent_problem = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
 
