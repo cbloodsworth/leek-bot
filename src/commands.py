@@ -1,4 +1,5 @@
 import leetcode as lc
+import dbdriver as db
 import asyncio
 import csv
 from discord import TextChannel, Message, Client
@@ -43,9 +44,7 @@ async def lc_follow(args: list[str], channel: TextChannel, client: Client):
 
         # Decided to follow user
         if str(reaction.emoji) == "✅":
-            with open('data/followed_users.csv', 'a', encoding='utf-8') as f:
-                writer = csv.writer(f)
-                writer.writerow([username])
+            db.push_user(username, True)
             await channel.send(f"{username} was followed!")
 
         # Decided not to follow user
