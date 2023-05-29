@@ -52,7 +52,7 @@ async def clear_cache():
     if cache: cache.clear() 
     
 
-@tasks.loop(seconds=30)
+@tasks.loop(hours=24)
 async def update_streak(channel):
     for user in db.get_followed():
         if lc.leetcodeScrape(user).recent: db.update_streak(user)
