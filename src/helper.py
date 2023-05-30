@@ -7,3 +7,15 @@ def is_business_hours() -> bool:
 
     if start_time <= current_time <= end_time: return True
     else: return False
+
+def seconds_until_7pm():
+    now = datetime.datetime.now()
+    target = now.replace(hour=19, minute=0, second=0, microsecond=0)
+    
+    if now.hour >= 19:
+        target += datetime.timedelta(days=1)  # Move target to tomorrow if it's already past 7 PM
+    
+    diff = (target - now).total_seconds()
+    print(f"{target} - {now} = {diff}")
+    return diff
+

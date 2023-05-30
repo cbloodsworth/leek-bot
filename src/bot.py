@@ -1,5 +1,6 @@
 import discord
 import os
+import asyncio
 from discord.ext import tasks
 import commands as cm
 import leetcode as lc
@@ -17,7 +18,6 @@ async def on_ready():
 
     channel = client.get_channel(1112495961130934312)
     check_for_recent_problems.start(channel=channel)
-    clear_cache.start()
     update_streak.start(channel=channel)
 
 
@@ -47,13 +47,10 @@ async def check_for_recent_problems(channel):
             await channel.send(f"{user} just completed {recent_problem}!")
 
 
-@tasks.loop(hours=2)
-async def clear_cache():
-    if cache: cache.clear() 
-    
-
 @tasks.loop(hours=24)
 async def update_streak(channel):
+    await asyncio.sleep(hlpr.seconds_until_7pm())  # Wake up at 7pm every day
+    if cache: cache.clear()
     for user in db.get_followed():
         if lc.leetcodeScrape(user).recent: 
             streak = db.update_streak(user)
