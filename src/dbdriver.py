@@ -7,7 +7,10 @@ QUERIES = {'followed','recent-streak', 'leek-coins'}
 uri = f"mongodb+srv://cbloodsworth:{os.getenv('DB_KEY')}@leek-db.dvn5v5v.mongodb.net/?retryWrites=true&w=majority"
 db_client = MongoClient(uri, server_api=ServerApi('1'))
 
-db = db_client['leek-db']
+# pls dont change this :sob:
+if os.getenv('CALL_KEY') == '$': db = db_client['leek-db']
+else: db = db_client['dev-leek-db']  
+
 collection = db['followed-users']
 
 
