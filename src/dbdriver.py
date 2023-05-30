@@ -4,7 +4,7 @@ import os
 import datetime
 
 QUERIES = {'followed','recent-streak', 'leek-coins'}
-CACHE_STALE_FACTOR = 0  #TODO: CHANGE THIS
+CACHE_STALE_FACTOR = 2
 
 uri = f"mongodb+srv://cbloodsworth:{os.getenv('DB_KEY')}@leek-db.dvn5v5v.mongodb.net/?retryWrites=true&w=majority"
 db_client = MongoClient(uri, server_api=ServerApi('1'))
