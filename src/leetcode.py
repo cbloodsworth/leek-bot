@@ -45,16 +45,16 @@ def checkUser(username: str) -> bool:
     r = requests.get("https://leetcode.com/" + username)
     return r.status_code != 404
 
-def superRecentProblem(username: str):
+def superRecentProblem(username: str) -> str:
     try: r = requests.get("https://leetcode.com/" + username)
-    except requests.exceptions.InvalidURL: return -1
+    except requests.exceptions.InvalidURL: return ""
     html_doc = bs(r.content, "html.parser")
 
     raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
     if "minute" in raw_recent:
         return html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
 
-    return None
+    return ""
 
 def leetcodeScrape(username: str) -> User:
     # Initialize user object

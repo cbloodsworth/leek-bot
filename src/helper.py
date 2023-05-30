@@ -16,6 +16,5 @@ def seconds_until_7pm():
         target += datetime.timedelta(days=1)  # Move target to tomorrow if it's already past 7 PM
     
     diff = (target - now).total_seconds()
-    print(f"{target} - {now} = {diff}")
     return diff
 
