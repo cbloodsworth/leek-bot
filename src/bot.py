@@ -18,6 +18,7 @@ async def on_ready():
 
     channel = client.get_channel(1112495961130934312)
     check_for_recent_problems.start(channel=channel)
+    clean_cache.start()
     update_streak.start(channel=channel)
 
 
@@ -35,22 +36,24 @@ async def on_message(message):
     elif cmd == cm.CMD_FOLLOWING: await cm.lc_following(message.channel)
 
 
-cache = set()
-@tasks.loop(minutes=6)
+@tasks.loop(minutes=6) 
 async def check_for_recent_problems(channel):
-    if not hlpr.is_business_hours: return
+    # print("Checking for recent problems...") 
     for user in db.get_followed():
         recent_problem = lc.superRecentProblem(user)
-        if not recent_problem: continue
-        if (user, recent_problem) not in cache:
-            cache.add((user, recent_problem))
+        if recent_problem != "" and db.push_cache(user, recent_problem):
             await channel.send(f"{user} just completed {recent_problem}!")
+
+
+@tasks.loop(hours=3) 
+async def clean_cache():
+    print("Cleaning cache...")
+    db.clean_cache()
 
 
 @tasks.loop(hours=24)
 async def update_streak(channel):
     await asyncio.sleep(hlpr.seconds_until_7pm())  # Wake up at 7pm every day
-    if cache: cache.clear()
     for user in db.get_followed():
         if lc.leetcodeScrape(user).recent: 
             streak = db.update_streak(user)

@@ -1,8 +1,10 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import os
+import datetime
 
 QUERIES = {'followed','recent-streak', 'leek-coins'}
+CACHE_STALE_FACTOR = 0  #TODO: CHANGE THIS
 
 uri = f"mongodb+srv://cbloodsworth:{os.getenv('DB_KEY')}@leek-db.dvn5v5v.mongodb.net/?retryWrites=true&w=majority"
 db_client = MongoClient(uri, server_api=ServerApi('1'))
@@ -12,6 +14,30 @@ if os.getenv('CALL_KEY') == '$': db = db_client['leek-db']
 else: db = db_client['dev-leek-db']  
 
 collection = db['followed-users']
+cache = db['cache']
+
+
+"""
+Pushes a <username, problem> pair to the cache database with the value of the current timestamp
+"""
+def push_cache(username: str, problem: str):
+    # if <username, problem> is not already in cache, push pair to cache as key with current timestamp as value
+    cache_entry = cache.find_one({'username': username, 'problem': problem})
+
+    if not cache_entry:
+        timestamp = datetime.datetime.now()
+        cache.insert_one({'username': username, 'problem': problem, 'timestamp': timestamp})
+        return True
+
+    return False
+
+
+"""
+Checks through cache and deletes any stale cache entries
+"""
+def clean_cache():
+    stale_timestamp = datetime.datetime.now() - datetime.timedelta(hours=CACHE_STALE_FACTOR)
+    result = cache.delete_many({'timestamp': {'$lt': stale_timestamp}})
 
 
 """
