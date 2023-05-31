@@ -10,9 +10,9 @@ def is_business_hours() -> bool:
 
 def seconds_until_7pm():
     now = datetime.datetime.now()
-    target = now.replace(hour=19, minute=0, second=0, microsecond=0)
+    target = now.replace(hour=23, minute=0, second=0, microsecond=0)
     
-    if now.hour >= 19:
+    if now.hour >= 23:
         target += datetime.timedelta(days=1)  # Move target to tomorrow if it's already past 7 PM
     
     diff = (target - now).total_seconds()
