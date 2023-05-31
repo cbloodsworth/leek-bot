@@ -45,16 +45,12 @@ async def check_for_recent_problems(channel):
             await channel.send(f"{user} just completed {recent_problem}!")
 
 
-@tasks.loop(hours=3) 
-async def clean_cache():
-    print("Cleaning cache...")
-    db.clean_cache()
-
-
 @tasks.loop(hours=24)
 async def update_streak(channel):
     print(f"update_streak(): Sleeping for {hlpr.seconds_until_7pm() // 3600} hours... ")
     await asyncio.sleep(hlpr.seconds_until_7pm())  # Wake up at 7pm every day
+    print("update_streak(): Woke up. Cleaning cache...")
+    db.clean_cache()
     for user in db.get_followed():
         print(f"update_streak(): Checking if {user} is recent...")
         if lc.leetcodeScrape(user).recent: 
