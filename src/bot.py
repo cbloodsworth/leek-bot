@@ -18,7 +18,6 @@ async def on_ready():
 
     channel = client.get_channel(1112495961130934312)
     check_for_recent_problems.start(channel=channel)
-    clean_cache.start()
     update_streak.start(channel=channel)
 
 
