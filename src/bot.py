@@ -38,27 +38,27 @@ async def on_message(message):
 
 @tasks.loop(minutes=6) 
 async def check_for_recent_problems(channel):
-    # print("Checking for recent problems...") 
+    print("Checking for recent problems...") 
     for user in db.get_followed():
         recent_problem = lc.superRecentProblem(user)
         if recent_problem != "" and db.push_cache(user, recent_problem):
             await channel.send(f"{user} just completed {recent_problem}!")
 
 
-@tasks.loop(hours=3) 
-async def clean_cache():
-    print("Cleaning cache...")
-    db.clean_cache()
-
-
 @tasks.loop(hours=24)
 async def update_streak(channel):
+    print(f"update_streak(): Sleeping for {hlpr.seconds_until_7pm() // 3600} hours... ")
     await asyncio.sleep(hlpr.seconds_until_7pm())  # Wake up at 7pm every day
+    print("update_streak(): Woke up. Cleaning cache...")
+    db.clean_cache()
     for user in db.get_followed():
+        print(f"update_streak(): Checking if {user} is recent...")
         if lc.leetcodeScrape(user).recent: 
+            print("\tRecent.")
             streak = db.update_streak(user)
             await channel.send(f"{user} is on a roll with a streak of {streak}!")
         else: 
+            print("\tNot recent.")
             if db.get_streak(user) != 0:
                 await channel.send(f"<@&1112788036074356798> {user} just lost their streak!")
                 db.reset_streak(user)
