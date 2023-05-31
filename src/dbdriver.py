@@ -26,6 +26,8 @@ def push_cache(username: str, problem: str):
 
     if not cache_entry:
         timestamp = datetime.datetime.now()
+        print()
+        print(f"push_cache(): Inserted {username}, {problem} into cache")
         cache.insert_one({'username': username, 'problem': problem, 'timestamp': timestamp})
         return True
 
@@ -38,6 +40,7 @@ Checks through cache and deletes any stale cache entries
 def clean_cache():
     stale_timestamp = datetime.datetime.now() - datetime.timedelta(hours=CACHE_STALE_FACTOR)
     result = cache.delete_many({'timestamp': {'$lt': stale_timestamp}})
+    print(f"clean_cache(): Deleted {result.deleted_count} entries.")
 
 
 """
