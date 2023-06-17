@@ -46,13 +46,23 @@ def checkUser(username: str) -> bool:
     return r.status_code != 404
 
 def superRecentProblem(username: str) -> str:
-    try: r = requests.get("https://leetcode.com/" + username)
-    except requests.exceptions.InvalidURL: return ""
+    try: 
+        print(f"superRecentProblem(): polling https://leetcode.com/{username}...")
+        r = requests.get("https://leetcode.com/" + username)
+    except requests.exceptions.InvalidURL: 
+        print(f"superRecentProblem(): Invalid URL error. Exiting...")
+        return ""
+
     html_doc = bs(r.content, "html.parser")
 
+    if not html_doc:
+        print("superRecentProblem(): For some reason, html_doc is None. This should not happen")
+        return ""
+
     raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
-    if "minute" in raw_recent:
-        return html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
+    for k in ["second", "minute", "hour"]:
+        if k in raw_recent:
+            return html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
 
     return ""
 

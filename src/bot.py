@@ -35,10 +35,12 @@ async def on_message(message):
     elif cmd == cm.CMD_FOLLOWING: await cm.lc_following(message.channel)
 
 
-@tasks.loop(minutes=6) 
+# TODO: CHANGE THIS BACK TO 7 MINUTES
+@tasks.loop(minutes=1) 
 async def check_for_recent_problems(channel):
     print("Checking for recent problems...") 
     for user in db.get_followed():
+        print(f"Running an audit on {user}...")
         recent_problem = lc.superRecentProblem(user)
         if recent_problem != "" and db.push_cache(user, recent_problem):
             await channel.send(f"{user} just completed {recent_problem}!")
