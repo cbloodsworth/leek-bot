@@ -59,10 +59,16 @@ def superRecentProblem(username: str) -> str:
         print("superRecentProblem(): For some reason, html_doc is None. This should not happen")
         return ""
 
-    raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
+    raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS)
+    if not raw_recent:
+        print("superRecentProblem(): Request to leetcode.com failed for some reason. \n\tTry again later I guess?")
+        return ""
+
+    recent = raw_recent.get_text()
     for k in ["second", "minute", "hour"]:
-        if k in raw_recent:
-            return html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
+        if k in recent:
+            raw_res = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS)
+            if raw_res: return raw_res.get_text()
 
     return ""
 
@@ -90,23 +96,34 @@ def leetcodeScrape(username: str) -> User:
     user.completed_total = sum(user.completed_list)
 
     # Get raw rank
-    raw_rank = html_doc.find("span", class_=LC.RANK_DIV_CLASS).get_text()
+    raw_rank = html_doc.find("span", class_=LC.RANK_DIV_CLASS)
+    if not raw_rank:
+        print("Error [leetcodeScrape]: Scraping failed")
+        return user
+
+    txt_rank = raw_rank.get_text()
 
     # Remove commas, assign rank
-    user.rank = int(raw_rank.replace(",", ""))
+    user.rank = int(txt_rank.replace(",", ""))
 
     # Get the most recent problem, if any
-    raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS).get_text()
+    raw_recent = html_doc.find("span", class_=LC.RECENT_DIV_CLASS)
+    if not raw_recent:
+        print("Error [leetcodeScrape]: Scraping failed")
+        return user
+    txt_recent = raw_recent.get_text()
 
     # If submitted recently (LC uses the format "23 hours ago")
     for k in ["minute", "hour", "day "]:
-        if k in raw_recent:
+        if k in txt_recent:
             user.recent = True
             break
     else: user.recent = False
 
     if user.recent:
-        user.recent_problem = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS).get_text()
+        raw_recent_problem = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS)
+        if raw_recent_problem: user.recent_problem = raw_recent_problem.get_text()
+        else: print("Error [leetcodeScrape]: Scraping failed")
 
     # Prints user data
     return user
