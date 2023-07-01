@@ -66,7 +66,7 @@ def superRecentProblem(username: str) -> str:
 
     recent = raw_recent.get_text()
     for k in ["second", "minute", "hour"]:
-        if k in recent:
+        if k in recent and k != "hours":
             raw_res = html_doc.find("span", class_=LC.RECENT_PROBLEM_DIV_CLASS)
             if raw_res: return raw_res.get_text()
 
